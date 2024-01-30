@@ -8,4 +8,9 @@ public class DeviceInfo {
         Log.i("Echo", value);
         return value;
     }
+
+    // public Object get(Object object){
+    //     Log.i("get", object.toString());
+    //     return  object;
+    // }
 }

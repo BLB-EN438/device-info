@@ -14,6 +14,9 @@ npx cap sync
 <docgen-index>
 
 * [`echo(...)`](#echo)
+* [`get()`](#get)
+* [`getId()`](#getid)
+* [Interfaces](#interfaces)
 
 </docgen-index>
 
@@ -33,5 +36,47 @@ echo(options: { value: string; }) => Promise<{ value: string; }>
 **Returns:** <code>Promise&lt;{ value: string; }&gt;</code>
 
 --------------------
+
+
+### get()
+
+```typescript
+get() => Promise<{ results: DeviceInfo; }>
+```
+
+**Returns:** <code>Promise&lt;{ results: <a href="#deviceinfo">DeviceInfo</a>; }&gt;</code>
+
+--------------------
+
+
+### getId()
+
+```typescript
+getId() => Promise<{ value: string; }>
+```
+
+**Returns:** <code>Promise&lt;{ value: string; }&gt;</code>
+
+--------------------
+
+
+### Interfaces
+
+
+#### DeviceInfo
+
+| Prop                   | Type                 |
+| ---------------------- | -------------------- |
+| **`serial`**           | <code>string</code>  |
+| **`batteryLevel`**     | <code>number</code>  |
+| **`batteryCharging`**  | <code>boolean</code> |
+| **`platform`**         | <code>string</code>  |
+| **`operatingSystem`**  | <code>string</code>  |
+| **`model`**            | <code>string</code>  |
+| **`manufacturer`**     | <code>string</code>  |
+| **`osVersion`**        | <code>string</code>  |
+| **`networkConnected`** | <code>boolean</code> |
+| **`ssid`**             | <code>string</code>  |
+| **`networkType`**      | <code>string</code>  |
 
 </docgen-api>
