@@ -4,6 +4,7 @@ import static android.content.Context.BATTERY_SERVICE;
 
 import static androidx.core.content.ContextCompat.getSystemService;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -18,12 +19,19 @@ import android.provider.Settings;
 import android.util.Log;
 
 import com.getcapacitor.JSObject;
+import com.getcapacitor.PermissionState;
 import com.getcapacitor.Plugin;
 import com.getcapacitor.PluginCall;
 import com.getcapacitor.PluginMethod;
 import com.getcapacitor.annotation.CapacitorPlugin;
+import com.getcapacitor.annotation.Permission;
+import com.getcapacitor.annotation.PermissionCallback;
 
-@CapacitorPlugin(name = "DeviceInfo")
+@CapacitorPlugin(name = "DeviceInfo",
+        permissions = {
+        @Permission(alias = "location",strings = {Manifest.permission.ACCESS_FINE_LOCATION})
+}
+)
 public class DeviceInfoPlugin extends Plugin {
 
     private final DeviceInfo implementation = new DeviceInfo();
@@ -46,6 +54,23 @@ public class DeviceInfoPlugin extends Plugin {
 
     @PluginMethod
     public void get(PluginCall call) {
+        if (getPermissionState("location") != PermissionState.GRANTED) {
+            requestPermissionForAlias("location", call, "locationPermsCallback");
+        } else {
+            fetchInfo(call);
+        }
+    }
+
+    @PermissionCallback
+    private void locationPermsCallback(PluginCall call){
+        if (getPermissionState("location") == PermissionState.GRANTED) {
+            fetchInfo(call);
+        } else {
+            call.reject("Permission is required to fetch info");
+        }
+    }
+
+    private void fetchInfo(PluginCall call) {
         JSObject ret = new JSObject();
         // get IMEI number
         try {
