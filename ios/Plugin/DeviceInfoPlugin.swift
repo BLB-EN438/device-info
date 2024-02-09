@@ -12,13 +12,6 @@ import SystemConfiguration
 public class DeviceInfoPlugin: CAPPlugin {
     private let implementation = DeviceInfo()
     
-    @objc func echo(_ call: CAPPluginCall) {
-        let value = call.getString("value") ?? ""
-        call.resolve([
-            "value": implementation.echo(value)
-        ])
-    }
-    
     func isConnectedToNetwork() -> Bool {
 
             var zeroAddress = sockaddr_in(sin_len: 0, sin_family: 0, sin_port: 0, sin_addr: in_addr(s_addr: 0), sin_zero: (0, 0, 0, 0, 0, 0, 0, 0))
@@ -72,41 +65,21 @@ public class DeviceInfoPlugin: CAPPlugin {
         return ""
     }
     
-    @objc func getId(_ call: CAPPluginCall) {
+    @objc func serialId(_ call: CAPPluginCall) {
         
         call.resolve([
-            "value": implementation.echo("demo123456")
+            "value": "i-serial"
         ])
     }
-    
-    struct Info: Codable {
-        let serial: String
-        let ssid: String
-        let batteryLevel:Int
-        let platform: String
-        let operatingSystem: String
-        
-        let model: String
-        let manufacturer: String
-        let osVersion: String
-        let networkConnected: Bool
-        let networkType: String
-        let batteryCharging: Bool
-    }
-    
-    @objc func get(_ call: CAPPluginCall) {
-        
-        print("Hello Bhargav! Fetching device info")
-        
+    @objc func batteryLevel(_ call: CAPPluginCall) {
         UIDevice.current.isBatteryMonitoringEnabled = true
         var batteryLevel: Float { UIDevice.current.batteryLevel }
-        
-        print("blb charging ")
-        print(UIDevice.current.batteryState)
-        
-        
-        let device = UIDevice()
-        
+        call.resolve([
+            "value": batteryLevel*100
+        ])
+    }
+    @objc func isBatteryCharging(_ call: CAPPluginCall) {
+        UIDevice.current.isBatteryMonitoringEnabled = true
         var charging:Bool=false
         
         UIDevice.current.isBatteryMonitoringEnabled = true
@@ -123,26 +96,59 @@ public class DeviceInfoPlugin: CAPPlugin {
             charging=false
         default:
             charging=false
-        
+            call.resolve([
+                "value": charging
+            ])
+        }
     }
+    @objc func manufacturer(_ call: CAPPluginCall) {
         
         call.resolve([
-            "results": [
-                "serial": "i-12345",
-                "ssid": "",
-                "batteryLevel": batteryLevel*100,
-                "platform": "Mobile",
-                "operatingSystem": "IOS",
-                "model": device.model,
-                "manufacturer": "Apple Inc",
-                "osVersion": device.systemVersion,
-                "networkConnected": isConnectedToNetwork(),
-                "networkType": networkType(),
-                "batteryCharging":charging
-            ]
+            "value": "Apple Inc"
         ])
-        
     }
-            
+    @objc func model(_ call: CAPPluginCall) {
+        
+        call.resolve([
+            "value": UIDevice().model
+        ])
+    }
+    @objc func operatingSystem(_ call: CAPPluginCall) {
+        
+        call.resolve([
+            "value": "IOS"
+        ])
+    }
+    @objc func osVersion(_ call: CAPPluginCall) {
+        
+        call.resolve([
+            "value": UIDevice().systemVersion
+        ])
+    }
+    @objc func platform(_ call: CAPPluginCall) {
+        
+        call.resolve([
+            "value": "Mobile"
+        ])
+    }
+    @objc func isNetworkConnected(_ call: CAPPluginCall) {
+        
+        call.resolve([
+            "value": isConnectedToNetwork()
+        ])
+    }
+    @objc func networkType(_ call: CAPPluginCall) {
+        
+        call.resolve([
+            "value": networkType()
+        ])
+    }
+    @objc func wifiSSID(_ call: CAPPluginCall) {
+        
+        call.resolve([
+            "value": "i-wifi"
+        ])
+    }
+    
 }
 

@@ -1,20 +1,13 @@
-export interface DeviceInfo {
-  serial?: string;
-  batteryLevel?: number;
-  batteryCharging?: boolean;
-
-  platform?: string;
-  operatingSystem?: string;
-  model?: string;
-  manufacturer?: string;
-  osVersion?: string;
-
-  networkConnected?: boolean;
-  ssid?: string;
-  networkType?: string;
-}
 export interface DeviceInfoPlugin {
-  echo(options: { value: string }): Promise<{ value: string }>;
-  get(): Promise<{ results: DeviceInfo }>;
-  getId(): Promise<{ value: string }>;
+  serialId(): Promise<{ value: string }>;
+  batteryLevel(): Promise<{ value: number}>;
+  isBatteryCharging(): Promise<{ value: boolean}>;
+  manufacturer(): Promise<{ value: string }>;
+  model(): Promise<{ value: string }>;
+  operatingSystem(): Promise<{ value: string}>;
+  osVersion(): Promise<{ value: string}>;
+  platform(): Promise<{ value: string}>;
+  isNetworkConnected(): Promise<{ value: boolean}>;
+  networkType(): Promise<{ value: string}>;
+  wifiSSID(): Promise<{ value: string}>;
 }
